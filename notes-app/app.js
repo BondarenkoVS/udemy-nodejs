@@ -1,7 +1,6 @@
 const utils = require('./utils');
 const notes = require('./notes');
 const validator = require('validator');
-const chalk = require('chalk');
 var yargs = require('yargs');
 
 
@@ -23,6 +22,23 @@ yargs
         },
         handler: (argv) => {
             notes.addNote(argv.title, argv.body);
+        }
+    })
+    .help()
+    .argv;
+yargs
+    .command({
+        command: 'remove',
+        desc: 'remove a note',
+        builder: {
+            title: {
+                describe: 'note title',
+                demandOption: true,
+                type: 'string'
+            }
+        },
+        handler: (argv) => {
+            notes.removeNote(argv.title);
         }
     })
     .help()
