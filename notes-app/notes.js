@@ -2,17 +2,20 @@ const fs = require('fs');
 const chalk = require('chalk');
 
 
-const getNotes = function () {
-
+const listNotes = () => {
+    const notes = loadNotes();
+    notes.forEach((note) => {
+        console.log("Title: ", note.title);
+        console.log("Body: ", note.body);
+    })
 };
 
-const addNote = function (title, body) {
+const addNote = (title, body) => {
     const notes = loadNotes();
-    const duplicateNotes = notes.filter(function (note) {
-        return note.title === title
-    });
 
-    if (duplicateNotes.length === 0) {
+    const duplicateNote = notes.find((note) => note.title === title);
+
+    if (!duplicateNote) {
         notes.push({
             title: title,
             body: body
@@ -21,15 +24,12 @@ const addNote = function (title, body) {
     } else {
         console.log(chalk.whiteBright.bgRed("Note title taken!"));
     }
-
     saveNotes(notes)
 };
 
 const removeNote = (title) => {
     const notes = loadNotes();
-    const notesToKeep = notes.filter((note) => {
-        return note.title !== title;
-    });
+    const notesToKeep = notes.filter((note) => note.title !== title);
     if (notes.length !== notesToKeep.length) {
         console.log(chalk.whiteBright.bgGreen('Note removed!'));
     } else {
@@ -38,7 +38,19 @@ const removeNote = (title) => {
     saveNotes(notesToKeep);
 };
 
-const loadNotes = function () {
+const readNote = (title) => {
+    const notes = loadNotes();
+    const note = notes.find((note) => note.title === title);
+
+    if (note) {
+        console.log(chalk.whiteBright.bgYellow(note.title));
+        console.log(chalk.whiteBright.bgCyan(note.body));
+    } else {
+        chalk.whiteBright.bgRed("No note found!");
+    }
+
+};
+const loadNotes = () => {
     try {
         const dataBuffer = fs.readFileSync('notes.json');
         const dataJSON = dataBuffer.toString();
@@ -49,13 +61,14 @@ const loadNotes = function () {
 
 };
 
-const saveNotes = function (notes) {
+const saveNotes = (notes) => {
     const dataJSON = JSON.stringify(notes);
     fs.writeFileSync('notes.json', dataJSON);
 };
 
 module.exports = {
-    getNotes,
+    listNotes,
     addNote,
-    removeNote
+    removeNote,
+    readNote
 };

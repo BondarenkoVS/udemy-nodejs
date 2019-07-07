@@ -1,6 +1,4 @@
-const utils = require('./utils');
 const notes = require('./notes');
-const validator = require('validator');
 var yargs = require('yargs');
 
 
@@ -39,6 +37,36 @@ yargs
         },
         handler: (argv) => {
             notes.removeNote(argv.title);
+        }
+    })
+    .help()
+    .argv;
+yargs
+    .command({
+        command: 'listNotes',
+        desc: 'get all notes',
+        handler: (argv) => {
+            notes.listNotes();
+        }
+    })
+    .help()
+    .argv;
+yargs
+    .command({
+        command: 'listNotes',
+        desc: 'get all notes',
+        handler: () => {
+            notes.listNotes();
+        }
+    })
+    .help()
+    .argv;
+yargs
+    .command({
+        command: 'readNote',
+        desc: 'get a note',
+        handler: (argv) => {
+            notes.readNote(argv.title);
         }
     })
     .help()
